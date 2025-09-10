@@ -1,4 +1,4 @@
-package co.edu.uptc.exceptions;
+package com.example.rule.exceptions;
 
 import java.util.List;
 

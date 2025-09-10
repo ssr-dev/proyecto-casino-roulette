@@ -8,15 +8,15 @@ import lombok.Data;
 
 @Data
 public class Round {
-    private Long id;
-    private LocalDateTime fecha;
-    private Integer numeroGanador;
-    private List<Bet> apuestas;
+    // private Long id;
+    // private LocalDateTime date;
+    private Integer winnigNumber;
+    private List<Bet> bets;
 
     public void girarRuleta() {
         Random random = new Random();
-        this.numeroGanador = random.nextInt(37); // 0 a 36
-        this.fecha = LocalDateTime.now();
+        this.winnigNumber = random.nextInt(37); // 0 a 36
+        // this.date = LocalDateTime.now();
     }
 
     public void getAllBets(){
