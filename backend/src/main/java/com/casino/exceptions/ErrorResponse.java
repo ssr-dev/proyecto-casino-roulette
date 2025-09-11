@@ -1,4 +1,4 @@
-package co.edu.uptc.exceptions;
+package com.casino.exceptions;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,6 +1,7 @@
-package com.example.rule.Model;
+package com.casino.Model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -8,18 +9,22 @@ import lombok.Data;
 
 @Data
 public class Round {
-    private Long id;
-    private LocalDateTime fecha;
-    private Integer numeroGanador;
-    private List<Bet> apuestas;
 
-    public void girarRuleta() {
-        Random random = new Random();
-        this.numeroGanador = random.nextInt(37); // 0 a 36
-        this.fecha = LocalDateTime.now();
+    private final List<Bet> bets = new ArrayList<>();
+    private int winningNumber = -1;
+
+
+    public void addBet(Bet bet) {
+        bets.add(bet);
     }
 
-    public void getAllBets(){
-        
+    public void resolve(int winningNumber) {
+        this.winningNumber = winningNumber;
+        for (Bet bet : bets) {
+            double payout = bet.calculatePayout(winningNumber);
+            if (payout > 0) {
+                bet.getUser().updateBalance(payout);
+            }
+        }
     }
 }

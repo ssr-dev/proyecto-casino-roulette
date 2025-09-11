@@ -1,4 +1,4 @@
-package co.edu.uptc.exceptions;
+package com.casino.exceptions;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import co.edu.uptc.helpers.ErrorCodes;
+import com.casino.helpers.ErrorCodes;
 
 @RestControllerAdvice
 public class GlobalExceptionHunt {

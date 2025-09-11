@@ -1,4 +1,4 @@
-package com.example.rule.controller;
+package com.casino.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("/rulete/co")
+@RequestMapping("/rulete/com")
 public class PeopleController {
 
   //   @Autowired

@@ -1,13 +1,18 @@
-package com.example.rule.Model;
+package com.casino.Model;
 
 import lombok.Data;
 import java.util.List;
+import java.util.Random;
 
 @Data
 public class Rulet {
 
-    private Long id;
-    private boolean activa; // true si está abierta a apuestas
-    private List<Round> rondas;
+    private final Random random = new Random();
+
+    public int spin() {
+        return random.nextInt(37); // valores entre 0 y 36
+    }
+
+
     
 }
