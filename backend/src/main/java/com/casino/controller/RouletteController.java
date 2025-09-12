@@ -12,7 +12,7 @@ public class RouletteController {
 
     @PostMapping("/spin")
     public int spin() {
-        return rouletteService.spinRoulette();
+    return rouletteService.spinRoulette();
     }
 
     @GetMapping("/current-round")

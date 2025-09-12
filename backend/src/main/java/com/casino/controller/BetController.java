@@ -1,6 +1,7 @@
 package com.casino.controller;
 
 import com.casino.model.Bet;
+import com.casino.model.User;
 import com.casino.service.BetService;
 import com.casino.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,23 @@ public class BetController {
     public Bet placeNumberBet(@RequestParam Long userId, 
                              @RequestParam int number,
                              @RequestParam double amount) {
-        return betService.placeNumberBet(userService.getUserById(userId), number, amount);
+        User user = userService.getUserById(userId); // ✅ Aquí se usa la clase User
+        return betService.placeNumberBet(user, number, amount);
     }
 
     @PostMapping("/color")
     public Bet placeColorBet(@RequestParam Long userId,
                             @RequestParam String color,
                             @RequestParam double amount) {
-        return betService.placeColorBet(userService.getUserById(userId), color, amount);
+        User user = userService.getUserById(userId); // ✅ Aquí se usa la clase User
+        return betService.placeColorBet(user, color, amount);
+    }
+    
+    @PostMapping("/tercio")
+    public Bet placeTercioBet(@RequestParam Long userId,
+                         @RequestParam int tercio,
+                         @RequestParam double amount) {
+        User user = userService.getUserById(userId); // ✅ Aquí se usa la clase User
+        return betService.placeTercioBet(user, tercio, amount);
     }
 }

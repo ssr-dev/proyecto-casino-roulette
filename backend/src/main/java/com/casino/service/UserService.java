@@ -1,32 +1,33 @@
 package com.casino.service;
 
 import com.casino.model.User;
+import com.casino.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class UserService {
-    private final Map<Long, User> users = new HashMap<>();
-    private long nextId = 1;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public User createUser(String name, double initialBalance) {
         User user = new User();
-        user.setId(nextId++);
         user.setName(name);
         user.setBalance(initialBalance);
-        users.put(user.getId(), user);
-        return user;
+        return userRepository.save(user);
     }
 
     public User getUserById(Long id) {
-        return users.get(id);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
     }
 
-    public void updateUserBalance(Long userId, double amount) {
-        User user = users.get(userId);
-        if (user != null) {
-            user.setBalance(user.getBalance() + amount);
-        }
+    public User updateUserBalance(Long userId, double amount) {
+        User user = getUserById(userId);
+        user.setBalance(user.getBalance() + amount);
+        return userRepository.save(user);
     }
 }
