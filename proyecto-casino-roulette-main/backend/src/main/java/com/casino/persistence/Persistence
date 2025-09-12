@@ -1,0 +1,31 @@
+package com.casino.Persistence;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class Persistence {
+
+    private static final String FILE_PATH = "data/roulette.txt";
+
+    public void saveData(String[] data) throws IOException {
+        FileWriter writer = new FileWriter(FILE_PATH);
+        for (int i = 0; i < data.length; i++) {
+            writer.write(i + ": " + data[i] + "\n");
+        }
+        writer.close();
+    }
+
+    public void readData() throws IOException {
+        FileReader reader = new FileReader(FILE_PATH);
+        BufferedReader buffer = new BufferedReader(reader);
+        String line;
+
+        while ((line = buffer.readLine()) != null) {
+            System.out.println(line);
+        }
+
+        buffer.close();
+    }
+}
