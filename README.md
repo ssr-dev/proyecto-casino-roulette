@@ -28,11 +28,18 @@ Sistema completo de ruleta de casino con backend en Spring Boot y frontend en Re
 
 | # | Nombre | Código | Rol Principal | Responsabilidades |
 |---|--------|--------|---------------|-------------------|
-| 1 | **A** | 202310123 | Backend Lead | API development, lógica del juego |
-| 2 | **B** | 202310456 | Frontend Lead | Componentes React, animaciones |
-| 3 | **C** | 202310789 | Full Stack | Integración, testing, bases de datos |
-| 4 | **D** | 202310101 | UI/UX Design | Diseño interfaz, experiencia de usuario |
-| 5 | **E** | 202310112 | DevOps | Configuración, deployment, documentación |
+| 1 | **Santiago Salamanca Rodriguez** | 202320292 | Backend Lead & Git Master | Desarrollo API, lógica del juego, gestión de Git |
+| 2 | **Andres Santiago Parra Rojas** | 202321020 | Backend & Modelado | Desarrollo de clases y modelo del negocio |
+| 3 | **Jennifer Granados Nossa** | 202320858 | Frontend & Persistencia | Componentes React, gestión de persistencia de datos |
+| 4 | **Julián Arturo Albarracín** | 202322668 | Frontend & Persistencia | Componentes React, gestión de persistencia de datos |
+| 5 | **Andrés Felipe Moreno Sandoval** | 202320064 | Frontend | Desarrollo de interfaz de usuario |
+
+**Integrantes y código:**
+* Santiago Salamanca Rodriguez (202320292)
+* Andres Santiago Parra Rojas (202321020)
+* Andrés Felipe Moreno Sandoval (202320064)
+* Jennifer Granados Nossa (202320858)
+* Julián Arturo Albarracín (202322668)
 
 ## 🎯 Descripción del Proyecto
 
