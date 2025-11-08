@@ -1,0 +1,232 @@
+/* BettingTable.css - Cambios para look clásico casino */
+
+.betting-table {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  background: linear-gradient(135deg, #0a4d1a 80%, #0e2e11 100%);
+  border-radius: 18px;
+  border: 4px solid #fff;
+  box-shadow: 0 0 0 8px #065f46, 0 8px 32px #000a;
+  color: #fff;
+}
+
+/* Grid principal */
+.bet-grid {
+  display: grid;
+  grid-template-columns: 60px 1fr 60px;
+  grid-template-rows: auto;
+  gap: 0;
+  align-items: stretch;
+  padding: 8px;
+}
+
+/* LEFT column (0) */
+.left-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color: #22C55E;
+  align-items: stretch;
+  grid-row: 1 / span 3;
+  margin-right: 8px;
+}
+
+/* Zero cell visually tall to match 3 number rows */
+.zero-cell {
+  height: 100%;
+  min-height: 132px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #0f0 80%, #0a4d1a 100%);
+  color: #222;
+  border: 2.5px solid #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: inset 0 -3px rgba(0,0,0,0.2);
+}
+
+/* CENTER column */
+.center-column {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+/* Números: 12 columnas, cada columna con 3 celdas (arriba: 3, medio:2, abajo:1) */
+.numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(3, 40px);
+  gap: 6px;
+}
+
+/* Una columna de números */
+.number-column {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Estilo de cada número */
+.bet-cell {
+  min-width: 40px;
+  min-height: 40px;
+  font-size: 1.15rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 2.5px solid #fff;
+  position: relative;
+  box-shadow: 0 2px 8px #0008 inset;
+  text-shadow: 0 1px 2px #000, 0 0 6px #fff8;
+  background: #0a4d1a;
+  transition: background 0.2s, border 0.2s, box-shadow 0.2s;
+}
+
+/* Rojo y negro más vivos */
+.red {
+  background: linear-gradient(135deg, #e10600 70%, #a30000 100%);
+  color: #fff;
+  border-color: #fff;
+}
+.black {
+  background: linear-gradient(135deg, #232323 70%, #000 100%);
+  color: #fff;
+  border-color: #fff;
+}
+
+/* highlight */
+.highlight {
+  border: 3px solid #ffd700;
+  box-shadow: 0 0 16px #ffd700cc, 0 0 0 3px #fff;
+  z-index: 2;
+}
+
+/* Docenas (fila intermedia) */
+.dozens {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.dozen-cell {
+  min-height: 40px;
+  font-size: 1rem;
+  border-radius: 8px;
+  background: #064e3b;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Bottom bets (1-18, EVEN, RED, BLACK, ODD, 19-36) */
+.bottom-bets {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.bottom-cell {
+  min-height: 36px;
+  font-size: 1rem;
+  border-radius: 8px;
+  background: #064e3b;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* RIGHT column (2:1 boxes) */
+.right-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  gap: 6px;
+  margin-left: 8px;
+  height: 100%;
+}
+
+.column-cell {
+  min-height: 40px;
+  font-size: 1rem;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+/* bet amount chip */
+.bet-amount {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  background: #ffd700;
+  color: #222;
+  border-radius: 50%;
+  padding: 2px 7px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  box-shadow: 0 2px 6px #0006;
+  border: 1.5px solid #fff;
+}
+
+/* Hover y focus */
+.bet-cell:hover, .bet-cell:focus,
+.dozen-cell:hover, .dozen-cell:focus,
+.bottom-cell:hover, .bottom-cell:focus,
+.column-cell:hover, .column-cell:focus {
+  background: #fff;
+  color: #0a4d1a;
+  border-color: #ffd700;
+  box-shadow: 0 0 16px #ffd700cc, 0 0 0 3px #fff;
+  outline: none;
+}
+
+/* Responsive tweaks */
+@media (max-width: 1100px) {
+  .betting-table { padding: 12px; }
+  .number-column .bet-cell { width: 44px; height: 44px; font-size: 13px; }
+  .zero-cell { min-height: calc(3 * 44px + 2 * 6px); width: 64px; }
+  .dozen-cell { width: 140px; height: 42px; }
+  .bottom-cell { height: 42px; }
+  .column-cell { width: 56px; height: 42px; }
+}
+
+@media (max-width: 700px) {
+  /* en pantallas muy pequeñas apilamos columnas */
+  .bet-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+  }
+  .left-column { order: 1; grid-column: auto; }
+  .center-column { order: 2; }
+  .right-column { order: 3; flex-direction: row; gap: 8px; justify-content:center; }
+  .numbers-grid { flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .number-column { flex-direction: column; }
+}
+
+@media (max-width: 500px) {
+  .bet-cell, .chip-button {
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 0.95rem;
+  }
+  .betting-table { padding: 4px; }
+}
+

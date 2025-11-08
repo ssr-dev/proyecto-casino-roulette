@@ -1,0 +1,83 @@
+.game-info-container {
+  background-color: #181818;
+  border: 2.5px solid #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #000a;
+  color: #fff;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-top: 3px solid #facc15; /* borde superior temático */
+}
+
+.game-info-header {
+  border-bottom: 1px solid #374151;
+  padding-bottom: 0.5rem;
+}
+
+.game-info-player {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 0 1px 2px #000, 0 0 6px #fff8;
+  border-bottom: 1.5px solid #ffd700;
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.7rem;
+}
+
+.game-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  color: #9ca3af; /* gris claro */
+}
+
+.value {
+  font-weight: bold;
+}
+
+.value.credits {
+  font-size: 1.5rem;
+  color: #34d399; /* verde */
+}
+
+.value.bet {
+  font-size: 1.25rem;
+  color: #60a5fa; /* azul */
+}
+
+.value.win {
+  font-size: 1.25rem;
+  color: #c084fc; /* morado */
+}
+
+/* Estilos para el panel de historial y caliente/frío */
+.history-panel,
+.hotcold-panel {
+  background: #181818;
+  border: 2.5px solid #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #000a;
+  color: #fff;
+  padding: 1.2rem;
+}
+
+.history-title, .hotcold-title {
+  color: #ffd700;
+  font-weight: bold;
+  text-shadow: 0 1px 2px #000, 0 0 6px #fff8;
+  border-bottom: 1.5px solid #ffd700;
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.7rem;
+}
+
+.history-number, .hotcold-number {
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px #0008 inset;
+  font-weight: bold;
+  text-shadow: 0 1px 2px #000, 0 0 6px #fff8;
+}

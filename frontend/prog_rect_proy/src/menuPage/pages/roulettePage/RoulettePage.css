@@ -1,0 +1,176 @@
+
+/* 🎯 Estilo general */
+.app-container {
+  min-height: 100vh;
+  background: radial-gradient(circle at center, #006400 0%, #001a00 100%);
+  color: #f8fafc;
+  padding: 2rem 0; /* elimina el padding horizontal, mantiene solo vertical */
+  display: flex;
+  flex-direction: column;
+    width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
+}
+
+/* 🏷️ Título principal */
+.app-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #facc15;
+  margin-bottom: 2.5rem;
+  text-transform: uppercase;
+  text-shadow: 0 0 15px rgba(250, 204, 21, 0.6), 0 0 25px rgba(0, 0, 0, 0.6);
+  letter-spacing: 2px;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: radial-gradient(
+    circle at center,
+    rgba(41, 41, 41, 0.63) 10%,
+    rgba(0, 0, 0, 0.623) 100%
+  );
+  gap: 2rem;
+  padding: 2rem 0 3rem 0; /* padding superior */
+  border-radius: 15px;
+  width: 100%;
+  max-width: 1300px;
+  padding-bottom: 3rem;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6); /* para más profundidad */
+  backdrop-filter: blur(4px); /* efecto elegante de vidrio */
+}
+
+@media (min-width: 1024px) {
+  .main-grid {
+    grid-template-columns: repeat(3, 1fr);
+    align-items: start;
+  }
+}
+
+.left-panel,
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  background: rgba(19, 64, 74, 0.4);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  backdrop-filter: blur(4px);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.center-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+/* 🌟 Modal de ganador */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.winner-modal {
+  padding: 2.5rem 3rem;
+  border-radius: 1rem;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+  min-width: 300px;
+  max-width: 400px;
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+
+/* Colores según el resultado */
+.winner-modal.red {
+  background: linear-gradient(145deg, #b91c1c, #7f1d1d);
+  border: 2px solid #fca5a5;
+}
+
+.winner-modal.black {
+  background: linear-gradient(145deg, #111827, #1e293b);
+  border: 2px solid #9ca3af;
+}
+
+.winner-modal.green {
+  background: linear-gradient(145deg, #065f46, #064e3b);
+  border: 2px solid #6ee7b7;
+}
+
+.winner-modal:hover {
+  transform: scale(1.03);
+}
+
+/* 🥇 Texto dentro del modal */
+.winner-title {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.winner-number {
+  font-size: 6rem;
+  font-weight: 900;
+  color: #facc15;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 10px #000;
+}
+
+.winner-amount {
+  font-size: 1.4rem;
+  color: #fff;
+}
+
+.amount {
+  font-weight: 700;
+  color: #86efac;
+  font-size: 1.6rem;
+}
+
+/* 🔘 Botón cerrar */
+.close-button {
+  margin-top: 2rem;
+  padding: 0.8rem 2rem;
+  background-color: #2563eb;
+  border: none;
+  border-radius: 0.75rem;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+}
+
+.close-button:hover {
+  background-color: #1d4ed8;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.8);
+}
+
+/* 🧩 Detalles estéticos */
+button,
+.app-title,
+.winner-title {
+  user-select: none;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}

@@ -1,0 +1,120 @@
+.hotcold-panel {
+  background-color: #181818;
+  border: 2.5px solid #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #000a;
+  color: #fff;
+  padding: 1.2rem;
+}
+
+.hotcold-container {
+  background-color: #1f2937; /* gris oscuro */
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  color: white;
+}
+
+.hotcold-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #ffd700;
+  text-align: center;
+  border-bottom: 1.5px solid #ffd700;
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.7rem;
+  text-shadow: 0 1px 2px #000, 0 0 6px #fff8;
+}
+
+.hotcold-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.hotcold-subtitle {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #9ca3af;
+  text-align: left;
+}
+
+.hotcold-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+/* Círculos de números */
+.hotcold-number {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  border: 2px solid #fff;
+  text-shadow: 0 1px 2px #000, 0 0 6px #fff8;
+}
+
+/* Colores según el tipo de número */
+.hotcold-number.red {
+  background-color: #dc2626; /* rojo */
+}
+
+.hotcold-number.black {
+  background-color: #111827; /* negro */
+}
+
+.hotcold-number.green {
+  background-color: #16a34a; /* verde */
+}
+
+/* Diferenciación visual */
+.hot-section .hotcold-number {
+  border: 2px solid #f87171; /* borde rojo claro */
+}
+
+.cold-section .hotcold-number {
+  border: 2px solid #60a5fa; /* borde azul claro */
+}
+
+/* Estado vacío */
+.hotcold-empty {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* Borde superior temático */
+.history-panel,
+.hotcold-panel,
+.game-info-container {
+  background: #181818;
+  border: 2.5px solid #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #000a;
+  color: #fff;
+  padding: 1.2rem;
+}
+
+.history-title, .hotcold-title, .game-info-player {
+  color: #ffd700;
+  font-weight: bold;
+  text-shadow: 0 1px 2px #000, 0 0 6px #fff8;
+  border-bottom: 1.5px solid #ffd700;
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.7rem;
+}
+
+.history-number, .hotcold-number {
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px #0008 inset;
+  font-weight: bold;
+  text-shadow: 0 1px 2px #000, 0 0 6px #fff8;
+}

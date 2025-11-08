@@ -1,0 +1,120 @@
+.chip-selector-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: #1f2937; /* gris oscuro */
+  border-radius: 0.75rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.chip-button {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 1.125rem;
+  position: relative;
+  overflow: hidden;
+  border: 2.5px solid #fff;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px #0008, 0 0 0 4px #ffd70033;
+  cursor: pointer;
+}
+
+.chip-selected {
+  border-color: #ffd700;
+  box-shadow: 0 0 16px #ffd700cc, 0 0 0 3px #fff;
+  transform: scale(1.12);
+}
+
+/* Colores base */
+.chip-gray {
+  background-color: #d1d5db;
+  color: #1f2937;
+}
+
+.chip-red {
+  background-color: #dc2626;
+  color: #fff;
+}
+
+.chip-blue {
+  background-color: #2563eb;
+  color: #fff;
+}
+
+.chip-green {
+  background-color: #16a34a;
+  color: #fff;
+}
+
+.chip-purple {
+  background-color: #7e22ce;
+  color: #fff;
+}
+
+.chip-yellow {
+  background-color: #eab308;
+  color: #1f2937;
+}
+
+.chip-black {
+  background-color: #000;
+  color: #fff;
+}
+
+/* Efecto brillo */
+.chip-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 25% 25%,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+}
+
+.chip-label {
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 1px 2px #0008;
+}
+
+.chip-button.chip-yellow .chip-label,
+.chip-button.chip-gray .chip-label {
+  color: #222;
+  text-shadow: 0 1px 2px #fff8;
+}
+
+/* Accesibilidad: enfoque visible en elementos interactivos */
+.bet-cell:focus-visible,
+.chip-button:focus-visible,
+.spin-button:focus-visible,
+.clear-button:focus-visible {
+  outline: 2px solid #facc15;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px #facc1533;
+}
+
+/* Transiciones suaves en elementos interactivos */
+.bet-cell,
+.chip-button,
+.spin-button,
+.clear-button,
+.column-cell,
+.dozen-cell,
+.bottom-cell {
+  transition: background 0.2s, border 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+
+@media (max-width: 500px) {
+  .bet-cell, .chip-button {
+    min-width: 32px;
+    min-height: 32px;
+    font-size: 0.95rem;
+  }
+  .betting-table { padding: 4px; }
+}

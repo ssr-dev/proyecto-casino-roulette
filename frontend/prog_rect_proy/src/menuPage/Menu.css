@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Nabla&display=swap');
+
+/* Fondo general para pantallas de juego y registro */
+.game-screen,
+.register-screen {
+  min-height: 100vh;
+  background-color: #0f766e; /* Teal oscuro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Títulos principales */
+.game-screen h1,
+.register-screen h1 {
+  font-size: 2.5rem;
+  color: white;
+  font-weight: bold;
+}
+
+/* Transiciones suaves entre páginas */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

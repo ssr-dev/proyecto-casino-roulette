@@ -1,0 +1,81 @@
+.history-panel {
+  background: #181818;
+  border: 2.5px solid #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #000a;
+  color: #fff;
+  padding: 1.2rem;
+}
+
+.history-title {
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 0 1px 2px #000, 0 0 6px #fff8;
+  margin-bottom: 0.7rem;
+  border-bottom: 1.5px solid #ffd700;
+  padding-bottom: 0.3rem;
+}
+
+.history-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-height: 12rem;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+/* Scrollbar personalizada */
+.history-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+  background-color: #4b5563;
+  border-radius: 3px;
+}
+
+.history-list::-webkit-scrollbar-thumb:hover {
+  background-color: #6b7280;
+}
+
+.history-empty {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+/* Círculos de los números */
+.history-number {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.875rem;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px #0008 inset;
+  text-shadow: 0 1px 2px #000, 0 0 6px #fff8;
+}
+
+/* Colores según el tipo de número */
+.history-number.red {
+  background-color: #dc2626; /* rojo */
+}
+
+.history-number.black {
+  background-color: #111827; /* negro */
+}
+
+.history-number.green {
+  background-color: #16a34a; /* verde */
+}
+
+/* Borde superior temático */
+.history-panel,
+.hotcold-panel,
+.game-info-container {
+  border-top: 3px solid #facc15;
+}

@@ -1,0 +1,159 @@
+.home-container {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: url("../../assets/background.png") center/cover no-repeat;
+}
+
+.home-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(4px) brightness(0.7);
+  z-index: 0;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  z-index: 1;
+}
+
+.title {
+  font-family: "Nabla", cursive;
+  font-size: 4rem;
+  color: #fff;
+  letter-spacing: 0.1em;
+  font-weight: 900;
+  margin: 0;
+  text-shadow: 0 2px 12px #000a, 0 0 8px #ffd70099;
+}
+
+.roulette-icon-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+  width: 70px;
+  filter: drop-shadow(0 0 8px #ffd70088);
+}
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  margin-top: 1rem;
+  z-index: 1;
+}
+
+.panel-glass {
+  background: rgba(0, 0, 0, 0.32);
+  border-radius: 12px;
+  padding: 2.2rem 2rem;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 16px #0005;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 340px;
+  max-width: 400px;
+  align-items: stretch;
+  backdrop-filter: blur(2px) saturate(1.1);
+}
+
+.menu-link {
+  width: 100%;
+  text-decoration: none;
+}
+
+.menu-btn-big {
+  width: 100%;
+  background: #dc2626;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  padding: 0.9rem 0;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  cursor: pointer;
+  transition: background 0.18s, box-shadow 0.18s, transform 0.09s;
+  justify-content: flex-start;
+  box-shadow: 0 2px 8px #0003;
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-btn-big:hover {
+  background: #b91c1c;
+  transform: scale(1.03);
+}
+
+.menu-btn-big svg {
+  height: 2.1rem;
+  width: 2.1rem;
+  margin-left: 10px;
+}
+
+.menu-btn-big span {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 4px #000a;
+}
+
+.header-right-gold {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: rgba(250, 204, 21, 0.65);
+  color: #222;
+  padding: 8px 22px 8px 14px;
+  border-radius: 0 0 14px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  box-shadow: 0 2px 8px #0003, 0 0 8px #ffd70066;
+  z-index: 10;
+  border: 1px solid #fffbe6;
+}
+
+.user-label {
+  margin-right: 2px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .title {
+    font-size: 2.2rem;
+  }
+  .panel-glass {
+    padding: 1rem;
+    min-width: 200px;
+    max-width: 95vw;
+  }
+  .menu-btn-big {
+    font-size: 1rem;
+    padding: 10px 0;
+    gap: 10px;
+  }
+  .roulette-icon-home {
+    height: 38px;
+    width: 38px;
+  }
+}
