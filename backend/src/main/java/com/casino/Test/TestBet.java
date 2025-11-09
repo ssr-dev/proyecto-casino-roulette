@@ -8,7 +8,7 @@ public class TestBet {
 
         System.out.println("=== PRUEBA DE TODAS LAS APUESTAS DE RULETA ===\n");
         
-        int winningNumber = 17; // Número ganador para las pruebas
+        int winningNumber = 31; // Número ganador para las pruebas
         System.out.println("Número ganador de la ronda: " + winningNumber + "\n");
 
         // 🔹 1. Apuesta a NÚMERO (35:1)

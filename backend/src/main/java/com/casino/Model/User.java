@@ -1,5 +1,6 @@
 package com.casino.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
@@ -14,6 +15,7 @@ public class User {
     public User(String name, double balance) {
         this.name = name;
         this.balance = balance;
+        this.bets = new ArrayList<>();
     }
 
     private void validateBalance(double amount) {
