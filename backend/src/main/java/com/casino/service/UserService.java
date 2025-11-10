@@ -10,12 +10,18 @@ import com.casino.Model.User;
 
 @Service
 public class UserService {
+	
+	private static final int MAX_USERS_CAPACITY = 20;
 
     private final Map<Long, User> users = new HashMap<>();
     private final AtomicLong idGenerator = new AtomicLong(1);
 
     /** Crear usuario */
     public User createUser(String name, double balance) {
+    	if(users.size() >= MAX_USERS_CAPACITY) {
+    		throw new IllegalStateException("Maximum user capacity reached.");
+    	}
+    	
         long id = idGenerator.getAndIncrement();
         User user = new User(name, balance);
         user.setId(id);
