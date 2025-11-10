@@ -1,6 +1,8 @@
 package com.casino.controller;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import com.casino.Model.User;
 import com.casino.dtos.CreateUserRequest;
@@ -20,9 +22,13 @@ public class UserController {
     /** Crear usuario */
     @PostMapping
     public UserDto createUser(@RequestBody CreateUserRequest request) {
-        User user = userService.createUser(request.getName(), request.getBalance());
+       try { 
+    	User user = userService.createUser(request.getName(), request.getBalance());
         return UserDto.toPersonDto(user);
-    }
+    }catch (IllegalArgumentException e) {
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+	}
+	}
 
     /** Obtener usuario por ID */
     @GetMapping("/{id}")
