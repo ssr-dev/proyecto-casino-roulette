@@ -8,20 +8,13 @@ import ChipSelector from "./components/ChipSelector";
 import GameInfo from "./components/GameInfo";
 import HistoryPanel from "./components/HistoryPanel";
 import HotColdStats from "./components/HotColdStats";
-import GameControls from "./components/GameControls";
-
-import {
-  getWinningNumber,
-  calculateWinnings,
-} from "../../../utils/rouletteLogic";
 
 import "./RoulettePage.css";
+import RouletteAPI from "../../../interceptors/axios";
 
 const RoulettePage = ({ user, setUser }) => {
-
-  // ???????????????????????????????????????????????????
   const navigate = useNavigate();
- 
+
   // verifica que se halla ingresado un usuario
   useEffect(() => {
     if (!user) {
@@ -52,15 +45,14 @@ const RoulettePage = ({ user, setUser }) => {
   // se crea historial de apuestas del jugador
   const [history, setHistory] = useState([]);
 
+  const [spinSignal, setSpinSignal] = useState(false);
+
   // Mantener créditos sincronizados con el usuario global
   useEffect(() => {
     setUser({ ...user, money: credits });
   }, [credits, setUser, user]);
 
-
-
   // ------------------------------------------------------------------------------------------------
-
 
   const currentBetAmount = useMemo(() => {
     return currentBets.reduce((sum, bet) => sum + bet.amount, 0);
@@ -83,43 +75,67 @@ const RoulettePage = ({ user, setUser }) => {
     setCurrentBets(newBets);
   };
 
-  const handleSpin = () => {
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        const signal = await RouletteAPI.getWinningNumber(); // El backend puede responder con { spin: true, number?: ... }
+        if (signal.spin === true && !spinning) {
+          setSpinSignal(true);
+        }
+      } catch (err) {
+        console.error("Error al verificar spin signal:", err);
+      }
+    }, 5000); // cada 5 segs pregunta al servidor
+
+    return () => clearInterval(interval);
+  }, [spinning]);
+
+
+  useEffect(() => {
+    if (!spinSignal || spinning) return;
+    handleSpin();
+  }, [spinSignal]);
+
+
+ const handleSpin = async () => {
     if (spinning || currentBetAmount === 0 || credits < currentBetAmount) return;
 
     setSpinning(true);
     setWinningNumber(null);
     setLastWinAmount(0);
 
-    const result = getWinningNumber();
-    setWinningNumber(result);
-  };
+    try {
+      // Enviar apuestas
+      await RouletteAPI.postBets(user.id || user.name, currentBets);
 
-  const handleSpinEnd = () => {
-    setSpinning(false);
+      // Obtener resultado
+      const result = await RouletteAPI.getWinningNumber();
+      setWinningNumber(result);
 
-    if (winningNumber) {
-      const { winnings, newCredits } = calculateWinnings(
-        currentBets,
-        winningNumber,
-        credits
+      // Calcular ganancias desde el servidor
+      const winningsResponse = await RouletteAPI.calculateWinnings(
+        user.id || user.name,
+        { bets: currentBets, result }
       );
 
-      setCredits(newCredits);
-      setLastWinAmount(winnings);
-      setHistory((prev) => [winningNumber.number, ...prev]);
+      setCredits(winningsResponse.newCredits || credits);
+      setLastWinAmount(winningsResponse.winnings || 0);
+      setHistory((prev) => [result.number, ...prev]);
+    } catch (error) {
+      console.error("Error durante el giro:", error);
+    } finally {
+      setCurrentBets([]);
+      setSpinning(false);
+      setSpinSignal(false);
+      handleClearBets();
     }
-
-    setCurrentBets([]);
   };
 
   const handleClearBets = () => {
-    if (spinning) return;
-    setCurrentBets([]);
+    if (!spinning) setCurrentBets([]);
   };
 
-
   // ----------------------------------------------------------------------------------------------
-
 
   return (
     <div className="app-container">
@@ -127,18 +143,13 @@ const RoulettePage = ({ user, setUser }) => {
         <div className="left-panel">
           <HistoryPanel history={history} />
           <HotColdStats history={history} />
-          <GameControls
-            onSpin={handleSpin}
-            onClearBets={handleClearBets}
-            canSpin={!spinning && currentBetAmount > 0 && credits >= currentBetAmount}
-          />
         </div>
 
         <div className="center-panel">
           <RouletteWheel
             spinning={spinning}
             winningNumber={winningNumber}
-            onSpinEnd={handleSpinEnd}
+            onSpinEnd={() => setSpinning(false)}
           />
         </div>
 
@@ -198,9 +209,8 @@ const RoulettePage = ({ user, setUser }) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div> 
+    </div>
   );
 };
 
 export default RoulettePage;
-

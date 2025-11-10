@@ -41,11 +41,16 @@ export const createUser = (userData) => api.post("/users", userData);
 // 👤 Obtener usuario por ID
 export const getUser = (userId) => api.get(`/users/${userId}`);
 
-// 🎯 Girar ruleta (envía apuesta, número seleccionado, monto, etc.)
-export const spinRoulette = (betData) => api.post("/roulette/spin", betData);
+// obtener numero ganador, esta señal se generara cada cierto tiempo
+export const getWinningNumber = () => api.get("/roulette/spin");
+
+// se hace el envio tanto de 
+export const postBets = (userId, bets) =>
+  api.post(`/roulette/bet/${userId}`, { bets });
 
 // 💰 Calcular ganancias según resultado
 export const calculateWinnings = (gameResult) => api.post("/roulette/winnings", gameResult);
+
 
 // 📜 Historial de jugadas del usuario
 export const getHistory = (userId) => api.get(`/roulette/history/${userId}`);
@@ -56,21 +61,18 @@ export const getHotNumbers = () => api.get("/roulette/stats/hot");
 // ❄️ Números Cold (menos frecuentes)
 export const getColdNumbers = () => api.get("/roulette/stats/cold");
 
-// 📊 Estadísticas combinadas
-export const getRouletteStats = () => api.get("/roulette/stats");
-
 // =======================
 // 🧩 Exportación principal
 // =======================
 const RouletteAPI = {
   createUser,
   getUser,
-  spinRoulette,
+  postBets,
   calculateWinnings,
+  getWinningNumber,
   getHistory,
   getHotNumbers,
   getColdNumbers,
-  getRouletteStats,
 };
 
 export default RouletteAPI;
