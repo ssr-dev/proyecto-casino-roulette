@@ -45,7 +45,6 @@ const RoulettePage = ({ user, setUser }) => {
   // se crea historial de apuestas del jugador
   const [history, setHistory] = useState([]);
 
-  const [spinSignal, setSpinSignal] = useState(false);
 
   // Mantener créditos sincronizados con el usuario global
   useEffect(() => {

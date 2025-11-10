@@ -83,6 +83,7 @@ export const calculateWinnings = (bets, winningNumber, initialCredits) => {
           }
         }
         break;
+
       case "range":
         if (winningNumber.number !== 0) {
           if (
@@ -102,6 +103,7 @@ export const calculateWinnings = (bets, winningNumber, initialCredits) => {
           }
         }
         break;
+        
       case "dozen":
         if (winningNumber.number !== 0) {
           if (

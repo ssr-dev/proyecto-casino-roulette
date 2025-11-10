@@ -19,7 +19,6 @@ public class UserDto {
         userDto.setId(user.getId());
         userDto.setName(user.getName());
         userDto.setBalance(user.getBalance());
-        userDto.setBets(user.getBets());
         return userDto;
     }
 }

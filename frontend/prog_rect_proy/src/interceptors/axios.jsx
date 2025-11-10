@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://api.mi-ruleta.com/api", // 🔗 Reemplaza con tu API real
+  baseURL: "http://localhost:8080", // 🔗 Reemplaza con tu API real
   timeout: 10000,
 });
 

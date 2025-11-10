@@ -11,9 +11,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BetService {
 
-    private final UserService userService;
-    private final RouletteService rouletteService;
-
     public Bet buildBet(SpinRequest req, User user) {
         double amount = req.getAmount();
         String type = req.getType();

@@ -6,8 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class SpinResult {
+    private boolean spin;
     private int winningNumber;
-    private String color;
-    private double payout;
-    private double newBalance;
 }

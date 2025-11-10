@@ -59,22 +59,6 @@ public class TestBet {
         System.out.println("Pago: $" + bet6.calculatePayout(winningNumber));
         System.out.println("-----");
 
-        // 🔹 7. Apuesta DOBLE (17:1)
-        System.out.println("7. APUESTA DOBLE (17:1)");
-        Bet bet7 = user.placeDobleBet(16, 17, 100);
-        System.out.println("Apuesta: números " + bet7.getNumerosDoble()[0] + " y " + bet7.getNumerosDoble()[1]);
-        System.out.println("¿Ganó? " + bet7.isWinner(winningNumber));
-        System.out.println("Pago: $" + bet7.calculatePayout(winningNumber));
-        System.out.println("-----");
-
-        // 🔹 8. Apuesta CALLE (11:1)
-        System.out.println("8. APUESTA CALLE (11:1)");
-        Bet bet8 = user.placeCalleBet(16, 100);
-        System.out.println("Apuesta: calle " + bet8.getCalle() + "-" + (bet8.getCalle()+1) + "-" + (bet8.getCalle()+2));
-        System.out.println("¿Ganó? " + bet8.isWinner(winningNumber));
-        System.out.println("Pago: $" + bet8.calculatePayout(winningNumber));
-        System.out.println("-----");
-
         // 🔹 Prueba con número perdedor
         System.out.println("=== PRUEBA CON NÚMERO PERDEDOR (5) ===");
         int losingNumber = 5;
@@ -106,9 +90,7 @@ public class TestBet {
                                bet3.calculatePayout(winningNumber) + 
                                bet4.calculatePayout(winningNumber) + 
                                bet5.calculatePayout(winningNumber) + 
-                               bet6.calculatePayout(winningNumber) + 
-                               bet7.calculatePayout(winningNumber) + 
-                               bet8.calculatePayout(winningNumber);
+                               bet6.calculatePayout(winningNumber);
         
         System.out.println("Ganancias potenciales si todas ganan: $" + totalGanancias);
     }
