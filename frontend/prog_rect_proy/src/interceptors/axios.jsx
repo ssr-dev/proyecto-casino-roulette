@@ -8,7 +8,7 @@ const api = axios.create({
 // =======================
 // 🔒 Interceptores
 // =======================
-api.interceptors.request.use(
+api.interceptors  .request.use(
   (config) => {
     // Aquí puedes añadir headers (token JWT, etc.)
     console.log("➡️ Enviando petición:", config.method?.toUpperCase(), config.url);
@@ -45,9 +45,12 @@ export const getUser = (userName) => api.get(`/users/${userName}`);
 // obtener numero ganador, esta señal se generara cada cierto tiempo
 export const getWinningNumber = () => api.get("/roulette/spin");
 
+
 // se hace el envio tanto de las apuestas realizadas en la ronda
-export const postBets = (userName, bets) =>
-  api.post(`/roulette/bet/${userName}`, { bets });
+export const postBets = (userId, bets) => {
+  return api.post(`/roulette/bet/${userId}`, bets);
+};
+
 
 // Historial de numeros que han salido en la ruleta
 export const getHistory = () => api.get("/roulette/history");
@@ -65,9 +68,11 @@ const RouletteAPI = {
   createUser,
   getUser,
   postBets,
+  getWinningNumber,
   getHistory,
   getHotNumbers,
   getColdNumbers,
 };
+
 
 export default RouletteAPI;

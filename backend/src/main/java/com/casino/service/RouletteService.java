@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.casino.dtos.SpinRequest;
 import com.casino.dtos.SpinResult;
 import com.casino.model.Bet;
 import com.casino.model.BetType;
@@ -25,13 +26,15 @@ public class RouletteService {
     private final Object lock = new Object();
 
     private final AtomicInteger lastNumber = new AtomicInteger(-1);
+    int winningNumber = 0;
 
     /** Spin manual (para endpoint /roulette/spin) */
     public int spinOnce() {
-        int n = rulet.spin();
-        appendToHistory(n);
-        lastNumber.set(n);
-        return n;
+        winningNumber = rulet.spin();
+        System.out.println("Spin automático generado: " + winningNumber);
+        appendToHistory(winningNumber);
+        lastNumber.set(winningNumber);
+        return winningNumber;
     }
 
     /** Auto-spin cada 1:30 min (90,000 ms). initialDelay opcional. */
@@ -57,51 +60,33 @@ public class RouletteService {
     @Autowired
     private UserService userService;
 
-    public void placeBet(Long userId, List<String> types, List<String> values, List<Double> amounts) {
+    @Autowired
+    private BetService betService;
 
+    public double placeBets(Long userId, List<SpinRequest> bets) {
         User user = userService.findById(userId);
-        
-        if (user == null) {
-            throw new IllegalArgumentException("Usuario no encontrado con ID: " + userId);
+        if (user == null)
+            throw new IllegalArgumentException("Usuario no encontrado");
+
+        double totalBetAmount = bets.stream()
+                .mapToDouble(SpinRequest::getAmount)
+                .sum();
+
+        if (user.getBalance() < totalBetAmount) {
+            throw new IllegalArgumentException("Saldo insuficiente");
         }
 
-        if (types.size() != values.size() || values.size() != amounts.size()) {
-            throw new IllegalArgumentException("Los parámetros de apuestas no coinciden en longitud.");
+        // Descontar saldo
+        user.setBalance(user.getBalance() - totalBetAmount);
+        // userRepository.save(user);
+
+        // Guardar apuestas
+        for (SpinRequest req : bets) {
+            Bet bet = betService.buildBet(req, user);
+            betService.resolvePayout(bet, winningNumber);
         }
 
-        for (int i = 0; i < types.size(); i++) {
-            String typeStr = types.get(i).toUpperCase();
-            String valueStr = values.get(i);
-            double amount = amounts.get(i);
-
-            BetType type = BetType.valueOf(typeStr);
-            Bet bet = null;
-
-            switch (type) {
-                case NUMBER:
-                    bet = user.placeNumberBet(Integer.parseInt(valueStr), amount);
-                    break;
-                case COLOR:
-                    bet = user.placeColorBet(valueStr, amount);
-                    break;
-                case DOZEN:
-                    bet = user.placeTercioBet(Integer.parseInt(valueStr), amount);
-                    break;
-                case COLUMN:
-                    bet = user.placeColumnaBet(Integer.parseInt(valueStr), amount);
-                    break;
-                case PARITY:
-                    bet = user.placeParImparBet(valueStr, amount);
-                    break;
-                case RANGE:
-                    bet = user.placeAltoBajoBet(valueStr, amount);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Tipo de apuesta inválido: " + typeStr);
-            }
-
-            // betService.save(bet);
-        }
+        return totalBetAmount; // opcional, por ejemplo si quieres devolver lo que apostó
     }
 
     /** Historial completo (máx 100) */

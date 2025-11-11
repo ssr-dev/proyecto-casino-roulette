@@ -1,7 +1,9 @@
 package com.casino.controller;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import com.casino.dtos.SpinRequest;
 import com.casino.dtos.SpinResult;
 import com.casino.service.RouletteService;
 
@@ -20,21 +22,18 @@ public class RouletteController {
     private final RouletteService rouletteService;
 
     /** ✅ GET /roulette/spin */
-    @PostMapping("/spin")
+    @GetMapping("/spin")
     public SpinResult spin() {
+        System.out.println("Spin automático generado: lalalala ");
         return rouletteService.autoSpin();
     }
 
-@GetMapping("/bet/{userId}")
-public void placeBet(
-        @PathVariable Long userId,
-        @RequestParam List<String> type,
-        @RequestParam List<String> value,
-        @RequestParam List<Double> amount) {
-
-    rouletteService.placeBet(userId, type, value, amount);
-}
-
+    @PostMapping("/bet/{userId}")
+    public double placeBets(
+            @PathVariable Long userId,
+            @RequestBody List<SpinRequest> bets) {
+        return rouletteService.placeBets(userId, bets);
+    }
 
     @GetMapping("/history")
     public List<Integer> history() {

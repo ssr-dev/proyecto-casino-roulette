@@ -24,7 +24,7 @@ const RoulettePage = ({ user, setUser }) => {
 
   if (!user) return null;
 
-  const [credits, setCredits] = useState(user.money);
+  const [credits, setCredits] = useState(user.balance);
   const [selectedChip, setSelectedChip] = useState(1);
   const [currentBets, setCurrentBets] = useState([]);
   const [spinning, setSpinning] = useState(false);
@@ -35,8 +35,8 @@ const RoulettePage = ({ user, setUser }) => {
 
   // Mantener créditos sincronizados con el usuario global
   useEffect(() => {
-    setUser({ ...user, money: credits });
-  }, [credits, setUser, user]);
+    setUser((prev) => ({ ...prev, balance: credits }));
+  }, [credits]);
 
   const currentBetAmount = useMemo(() => {
     return currentBets.reduce((sum, bet) => sum + bet.amount, 0);
@@ -48,6 +48,7 @@ const RoulettePage = ({ user, setUser }) => {
     const betIndex = currentBets.findIndex(
       (bet) => bet.type === type && bet.value === value
     );
+
     const newBets = [...currentBets];
 
     if (betIndex > -1) {
@@ -70,10 +71,10 @@ const RoulettePage = ({ user, setUser }) => {
       } catch (err) {
         console.error("Error al verificar spin signal:", err);
       }
-    }, 5000);
+    }, 90000); // <-- 3 segundos
 
     return () => clearInterval(interval);
-  }, [spinning]);
+  }, []); // <-- solo se ejecuta 1 vez
 
   // 🔹 Cuando llega la señal, girar la ruleta
   useEffect(() => {
@@ -82,36 +83,39 @@ const RoulettePage = ({ user, setUser }) => {
     }
   }, [spinSignal]);
 
-  const handleSpin = async () => {
-    if (spinning || currentBetAmount === 0 || credits < currentBetAmount) return;
+const handleSpin = async () => {
 
-    setSpinning(true);
-    setWinningNumber(null);
-    setLastWinAmount(0);
+  if (spinning || currentBetAmount === 0 || credits < currentBetAmount) return;
 
-    try {
-      // Enviar apuestas al backend
-      await RouletteAPI.postBets(user.id || user.name, currentBets);
+  setSpinning(true);
+  setWinningNumber(null);
+  setLastWinAmount(0);
 
-      // Obtener número ganador
-      const result = await RouletteAPI.getWinningNumber();
-      setWinningNumber(result.number);
+  try {
+    await RouletteAPI.postBets(user.id, currentBets);
 
-      // Simula cálculo de ganancias (debes tener endpoint real)
-      const winnings = Math.floor(Math.random() * currentBetAmount * 2);
-      const newCredits = credits - currentBetAmount + winnings;
+    const result = await RouletteAPI.getWinningNumber();
 
-      setCredits(newCredits);
-      setLastWinAmount(winnings);
-      setHistory((prev) => [result.number, ...prev]);
-    } catch (error) {
-      console.error("Error durante el giro:", error);
-    } finally {
-      setCurrentBets([]);
-      setSpinning(false);
-      setSpinSignal(false);
-    }
-  };
+    setWinningNumber(result.number);
+
+    const winnings = result.winnings ?? 0;
+
+    const newCredits = credits - currentBetAmount + winnings;
+    setCredits(newCredits);
+    setLastWinAmount(winnings);
+    setUser(prev => ({ ...prev, balance: newCredits }));
+
+    setHistory(prev => [result.number, ...prev]);
+
+  } catch (error) {
+    console.error("Error durante el giro:", error);
+  } finally {
+    setCurrentBets([]);
+    setSpinning(false);
+    setSpinSignal(false);
+  }
+};
+
 
   const handleClearBets = () => {
     if (!spinning) setCurrentBets([]);
@@ -196,4 +200,3 @@ const RoulettePage = ({ user, setUser }) => {
 };
 
 export default RoulettePage;
-
