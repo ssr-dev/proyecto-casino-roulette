@@ -57,7 +57,7 @@ public class User {
 
     public Bet placeParImparBet(String parImpar, double amount) {
         if (!parImpar.equalsIgnoreCase("PAR") && !parImpar.equalsIgnoreCase("IMPAR")) {
-            throw new IllegalArgumentException("Debe apostar a 'PAR' o 'IMPAR'.");
+            throw new IllegalArgumentException("El valor debe ser 'PAR' o 'IMPAR'.");
         }
         validateBalance(amount);
         Bet bet = new Bet(this, amount, BetType.PARITY);
@@ -67,7 +67,7 @@ public class User {
 
     public Bet placeAltoBajoBet(String altoBajo, double amount) {
         if (!altoBajo.equalsIgnoreCase("ALTO") && !altoBajo.equalsIgnoreCase("BAJO")) {
-            throw new IllegalArgumentException("Debe apostar a 'ALTO' (19-36) o 'BAJO' (1-18).");
+            throw new IllegalArgumentException("El valor debe ser 'ALTO' o 'BAJO'.");
         }
         validateBalance(amount);
         Bet bet = new Bet(this, amount, BetType.RANGE);
@@ -77,6 +77,24 @@ public class User {
 
     public void updateBalance(double amount) {
         this.balance += amount;
+    }
+    
+
+    public double getBalance() {
+        return this.balance;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+    
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setId(Long setId) {
+        this.id = setId;
     }
 
 }

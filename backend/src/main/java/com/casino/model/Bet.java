@@ -8,8 +8,6 @@ public class Bet {
     private User user;
     private double amount;
     private BetType type;
-
-
     private Integer number; 
     private String color;   
     private Integer tercio;
@@ -52,7 +50,7 @@ public class Bet {
                 return parImpar != null && parImpar.equalsIgnoreCase(resultadoParImpar);
 
             case RANGE:
-                String resultadoAltoBajo = (winningNumber >= 1 && winningNumber <= 18) ? "BAJO" : "ALTO";
+                String resultadoAltoBajo = (winningNumber <= 18) ? "BAJO" : "ALTO";
                 return altoBajo != null && altoBajo.equalsIgnoreCase(resultadoAltoBajo);
 
             default:
@@ -65,7 +63,7 @@ public class Bet {
 
         switch (type) {
             case NUMBER:
-                return amount * 36; // paga 35:1 + apuesta
+                return amount * 36;
 
             case COLOR:
             case PARITY:
@@ -81,7 +79,7 @@ public class Bet {
         }
     }
 
-    private String getColor(int number) {
+private String getColor(int number) {
         int[] rojos = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36};
         for (int rojo : rojos) {
             if (number == rojo) return "ROJO";
@@ -102,7 +100,5 @@ public class Bet {
         if (number % 3 == 0) return 3; // Columna 3: 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36
         return -1;
     }
-
-    
     
 }

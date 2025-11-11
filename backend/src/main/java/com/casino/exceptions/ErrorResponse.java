@@ -11,13 +11,13 @@ import lombok.Setter;
 public class ErrorResponse {
     private int status;
     private String message;
-    private LocalDateTime timeTamp;
+    private String timeTamp;
     private List<String> errorCodes;
 
     public ErrorResponse(int status, String message,  List<String> errorCodes) {
         this.status = status;
         this.message = message;
-        this.timeTamp = LocalDateTime.now();
+        this.timeTamp = LocalDateTime.now().toString();
         this.errorCodes = errorCodes;
     }
 
