@@ -2,8 +2,8 @@ package com.casino.service;
 
 import org.springframework.stereotype.Service;
 
-import com.casino.Model.*;
 import com.casino.dtos.SpinRequest;
+import com.casino.model.*;
 
 import lombok.RequiredArgsConstructor;
 

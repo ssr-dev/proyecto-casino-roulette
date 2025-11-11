@@ -1,4 +1,4 @@
-package com.casino.Model;
+package com.casino.model;
 
 public enum BetType {
     NUMBER,   // Apuesta a un número específico (paga 35:1)

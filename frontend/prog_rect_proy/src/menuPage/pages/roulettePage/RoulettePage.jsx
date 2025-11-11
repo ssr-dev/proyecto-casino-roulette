@@ -10,12 +10,12 @@ import HistoryPanel from "./components/HistoryPanel";
 import HotColdStats from "./components/HotColdStats";
 
 import "./RoulettePage.css";
-import RouletteAPI from "../../../interceptors/axios";
+import RouletteAPI from "../../../interceptors/axios.jsx";
 
 const RoulettePage = ({ user, setUser }) => {
   const navigate = useNavigate();
 
-  // verifica que se halla ingresado un usuario
+  // 🔹 Verifica usuario
   useEffect(() => {
     if (!user) {
       navigate("/login");
@@ -24,34 +24,19 @@ const RoulettePage = ({ user, setUser }) => {
 
   if (!user) return null;
 
-  // verifica que el usuario tenga creditos disponibles
   const [credits, setCredits] = useState(user.money);
-
-  // verifica las fichas seleccionadas [1,5,100]
   const [selectedChip, setSelectedChip] = useState(1);
-
-  // verifica las apuestas actuales [array]
   const [currentBets, setCurrentBets] = useState([]);
-
-  // verifica si la ruleta esta rodando
   const [spinning, setSpinning] = useState(false);
-
-  //  verifica el numero ganador [1,2,3,4,...]
   const [winningNumber, setWinningNumber] = useState(null);
-
-  // verifica ultima cantidad ganada por el jugador
   const [lastWinAmount, setLastWinAmount] = useState(0);
-
-  // se crea historial de apuestas del jugador
   const [history, setHistory] = useState([]);
-
+  const [spinSignal, setSpinSignal] = useState(false); // ✅ ahora sí existe
 
   // Mantener créditos sincronizados con el usuario global
   useEffect(() => {
     setUser({ ...user, money: credits });
   }, [credits, setUser, user]);
-
-  // ------------------------------------------------------------------------------------------------
 
   const currentBetAmount = useMemo(() => {
     return currentBets.reduce((sum, bet) => sum + bet.amount, 0);
@@ -74,29 +59,30 @@ const RoulettePage = ({ user, setUser }) => {
     setCurrentBets(newBets);
   };
 
+  // 🔹 Verifica cada 5s si el backend manda señal para girar
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
-        const signal = await RouletteAPI.getWinningNumber(); // El backend puede responder con { spin: true, number?: ... }
-        if (signal.spin === true && !spinning) {
+        const signal = await RouletteAPI.getWinningNumber();
+        if (signal.spin && !spinning) {
           setSpinSignal(true);
         }
       } catch (err) {
         console.error("Error al verificar spin signal:", err);
       }
-    }, 5000); // cada 5 segs pregunta al servidor
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [spinning]);
 
-
+  // 🔹 Cuando llega la señal, girar la ruleta
   useEffect(() => {
-    if (!spinSignal || spinning) return;
-    handleSpin();
+    if (spinSignal && !spinning) {
+      handleSpin();
+    }
   }, [spinSignal]);
 
-
- const handleSpin = async () => {
+  const handleSpin = async () => {
     if (spinning || currentBetAmount === 0 || credits < currentBetAmount) return;
 
     setSpinning(true);
@@ -104,21 +90,19 @@ const RoulettePage = ({ user, setUser }) => {
     setLastWinAmount(0);
 
     try {
-      // Enviar apuestas
+      // Enviar apuestas al backend
       await RouletteAPI.postBets(user.id || user.name, currentBets);
 
-      // Obtener resultado
+      // Obtener número ganador
       const result = await RouletteAPI.getWinningNumber();
-      setWinningNumber(result);
+      setWinningNumber(result.number);
 
-      // Calcular ganancias desde el servidor
-      const winningsResponse = await RouletteAPI.calculateWinnings(
-        user.id || user.name,
-        { bets: currentBets, result }
-      );
+      // Simula cálculo de ganancias (debes tener endpoint real)
+      const winnings = Math.floor(Math.random() * currentBetAmount * 2);
+      const newCredits = credits - currentBetAmount + winnings;
 
-      setCredits(winningsResponse.newCredits || credits);
-      setLastWinAmount(winningsResponse.winnings || 0);
+      setCredits(newCredits);
+      setLastWinAmount(winnings);
       setHistory((prev) => [result.number, ...prev]);
     } catch (error) {
       console.error("Error durante el giro:", error);
@@ -126,7 +110,6 @@ const RoulettePage = ({ user, setUser }) => {
       setCurrentBets([]);
       setSpinning(false);
       setSpinSignal(false);
-      handleClearBets();
     }
   };
 
@@ -182,14 +165,14 @@ const RoulettePage = ({ user, setUser }) => {
             transition={{ duration: 0.3 }}
           >
             <motion.div
-              className={`winner-modal ${winningNumber.color}`}
+              className="winner-modal"
               initial={{ scale: 0.8, y: -50 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.8, y: 50 }}
               transition={{ type: "spring", stiffness: 100, damping: 10 }}
             >
               <h2 className="winner-title">¡GANADOR!</h2>
-              <p className="winner-number">{winningNumber.number}</p>
+              <p className="winner-number">{winningNumber}</p>
               <p className="winner-amount">
                 Has ganado:
                 <span className="amount">
@@ -213,3 +196,4 @@ const RoulettePage = ({ user, setUser }) => {
 };
 
 export default RoulettePage;
+

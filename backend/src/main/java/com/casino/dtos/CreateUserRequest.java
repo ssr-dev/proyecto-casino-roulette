@@ -6,6 +6,4 @@ import lombok.Data;
 public class CreateUserRequest {
     private String name;
     private double balance;
-
-
 }

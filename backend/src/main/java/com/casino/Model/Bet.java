@@ -1,13 +1,13 @@
-package com.casino.Model;
+package com.casino.model;
 
 import lombok.Data;
 
 @Data
 public class Bet {
 
-    private final User user;
-    private final double amount;
-    private final BetType type;
+    private User user;
+    private double amount;
+    private BetType type;
 
 
     private Integer number; 
@@ -18,7 +18,7 @@ public class Bet {
     private String altoBajo;
 
     public Bet(User user,double amount, BetType type) {
-        this.user = null;
+        this.user = user;
         this.amount = amount;
         this.type = type;
     }
@@ -102,4 +102,7 @@ public class Bet {
         if (number % 3 == 0) return 3; // Columna 3: 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36
         return -1;
     }
+
+    
+    
 }

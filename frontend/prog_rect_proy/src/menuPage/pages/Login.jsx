@@ -8,7 +8,7 @@ import RouletteAPI from "../../interceptors/axios.jsx";
 const Login = ({ setUser, user }) => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [money, setMoney] = useState(1000);
+  // const [money, setMoney] = useState(1000);
   const [loading, setLoading] = useState(false); 
 
   const handleLogin = async (event) => {
@@ -24,13 +24,13 @@ const Login = ({ setUser, user }) => {
 
     try {
       //  Envía los datos del usuario al backend
-      const newUser = await RouletteAPI.createUser({ name, money:1000 });
+      await RouletteAPI.createUser({ name, balance:1000 });
 
-      // Guarda el usuario en el estado global y localStorage
+      const newUser = await RouletteAPI.getUser(name);
+
       setUser(newUser);
-      localStorage.setItem("user", JSON.stringify(newUser));
+      // localStorage.setItem("user", JSON.stringify(newUser));
 
-      // Redirige a la ruleta
       navigate("/roulette");
     } catch (error) {
       console.error("X Error al crear usuario:", error);

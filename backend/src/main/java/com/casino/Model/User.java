@@ -1,4 +1,4 @@
-package com.casino.Model;
+package com.casino.model;
 
 import lombok.Data;
 

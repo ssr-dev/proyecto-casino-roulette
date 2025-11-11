@@ -1,6 +1,6 @@
 package com.casino.Test;
 
-import com.casino.Model.*;
+import com.casino.model.*;
 
 public class TestBet {
     public static void main(String[] args) {
