@@ -8,8 +8,6 @@ public class Bet {
     private User user;
     private double amount;
     private BetType type;
-
-
     private Integer number; 
     private String color;   
     private Integer tercio;
@@ -52,7 +50,7 @@ public class Bet {
                 return parImpar != null && parImpar.equalsIgnoreCase(resultadoParImpar);
 
             case RANGE:
-                String resultadoAltoBajo = (winningNumber >= 1 && winningNumber <= 18) ? "BAJO" : "ALTO";
+                String resultadoAltoBajo = (winningNumber <= 18) ? "BAJO" : "ALTO";
                 return altoBajo != null && altoBajo.equalsIgnoreCase(resultadoAltoBajo);
 
             default:
@@ -65,7 +63,7 @@ public class Bet {
 
         switch (type) {
             case NUMBER:
-                return amount * 36; // paga 35:1 + apuesta
+                return amount * 36;
 
             case COLOR:
             case PARITY:
@@ -82,27 +80,90 @@ public class Bet {
     }
 
     private String getColor(int number) {
-        int[] rojos = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36};
-        for (int rojo : rojos) {
-            if (number == rojo) return "ROJO";
-        }
-        return "NEGRO";
+        if (number == 0) return "VERDE";
+        return (number % 2 == 0) ? "NEGRO" : "ROJO";
     }
 
     private int getTercio(int number) {
         if (number >= 1 && number <= 12) return 1;
         if (number >= 13 && number <= 24) return 2;
-        if (number >= 25 && number <= 36) return 3;
-        return -1;
+        return 3;
     }
 
     private int getColumna(int number) {
-        if (number % 3 == 1) return 1; // Columna 1: 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34
-        if (number % 3 == 2) return 2; // Columna 2: 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35
-        if (number % 3 == 0) return 3; // Columna 3: 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36
-        return -1;
+        if (number % 3 == 1) return 1;
+        if (number % 3 == 2) return 2;
+        return 3;
     }
 
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public void setType(BetType type) {
+		this.type = type;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+
+	public void setTercio(Integer tercio) {
+		this.tercio = tercio;
+	}
+	public void setColumna(Integer columna) {
+		this.columna = columna;
+	}
+
+
+	public void setParImpar(String parImpar) {
+		this.parImpar = parImpar;
+	}
+
+
+	public void setAltoBajo(String altoBajo) {
+		this.altoBajo = altoBajo;
+	}
+
+	public Integer getNumber() {
+	    return this.number;
+	}
+
+	public String getColor() {
+	    return this.color;
+	}
+
+	public Integer getTercio() {
+	    return this.tercio;
+	}
+
+	public Integer getColumna() {
+	    return this.columna;
+	}
+
+	public String getParImpar() {
+	    return this.parImpar;
+	}
+
+	public String getAltoBajo() {
+	    return this.altoBajo;
+	}
+
+	public double getAmount() {
+	    return this.amount;
+	}
+	public BetType getType() {
+	    return this.type;
+	}
     
     
 }
