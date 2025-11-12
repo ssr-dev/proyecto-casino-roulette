@@ -1,5 +1,6 @@
 package com.casino.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.casino.dtos.BetResults;
@@ -7,7 +8,7 @@ import com.casino.dtos.SpinRequest;
 import com.casino.dtos.SpinResult;
 import com.casino.service.RouletteService;
 
-import lombok.RequiredArgsConstructor;
+//import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
@@ -16,12 +17,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/roulette")
 @CrossOrigin(origins = "*")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class RouletteController {
 
-    private final RouletteService rouletteService;
+	@Autowired
+    private RouletteService rouletteService;
 
-    /** ✅ GET /roulette/spin */
     @GetMapping("/spin")
     public SpinResult spin() {
         System.out.println("Spin automático generado: lalalala ");
