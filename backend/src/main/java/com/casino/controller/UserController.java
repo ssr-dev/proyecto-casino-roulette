@@ -2,40 +2,67 @@ package com.casino.controller;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
-import com.casino.dtos.CreateUserRequest;
 import com.casino.dtos.UserDto;
 import com.casino.model.User;
 import com.casino.service.UserService;
 
-import lombok.RequiredArgsConstructor;
-
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "*")
-@RequiredArgsConstructor
 public class UserController {
+    @Autowired
+    private UserService userService;
 
-    private final UserService userService;
-
-    /** Crear usuario */
     @PostMapping
-    public UserDto createUser(@RequestBody CreateUserRequest request) {
+    public User createUser(@RequestBody Map<String, Object> requestBody) {
         try {
-            User user = userService.createUser(request.getName(), request.getBalance());
-            return UserDto.toPersonDto(user);
+            String name = (String) requestBody.get("name");
+            if (name == null || name.trim().isEmpty()) {
+                throw new IllegalArgumentException("El campo 'name' es obligatorio.");
+            }
+
+            Object balanceObj = requestBody.get("balance");
+            if (balanceObj == null) {
+                throw new IllegalArgumentException("El campo 'balance' es obligatorio.");
+            }
+
+            Double balance;
+            if (balanceObj instanceof Number) {
+                balance = ((Number) balanceObj).doubleValue();
+            } else if (balanceObj instanceof String) {
+                balance = Double.parseDouble((String) balanceObj);
+            } else {
+                throw new IllegalArgumentException("El campo 'balance' tiene un formato incorrecto.");
+            }
+
+            return userService.createUser(name, balance);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ClassCastException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error de formato de datos en 'name' o 'balance'.");
         }
     }
 
-    /** Obtener usuario por ID */
-    @GetMapping("/{name}")
-    public UserDto getUser(@PathVariable String name) {
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Long id) {
+        User user = userService.getUser(id);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado con ID: " + id);
+        }
+        return user;
+    }
+
+    @GetMapping("/name/{name}")
+    public UserDto getUserByName(@PathVariable String name) {
         User user = userService.getUserByName(name);
         if (user == null) {
-            throw new RuntimeException("Usuario no encontrado");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado con nombre: " + name);
         }
         return UserDto.toPersonDto(user);
     }
