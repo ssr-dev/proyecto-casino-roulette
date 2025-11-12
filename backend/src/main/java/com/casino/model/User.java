@@ -78,23 +78,5 @@ public class User {
     public void updateBalance(double amount) {
         this.balance += amount;
     }
-    
-
-    public double getBalance() {
-        return this.balance;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-    
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setId(Long setId) {
-        this.id = setId;
-    }
 
 }

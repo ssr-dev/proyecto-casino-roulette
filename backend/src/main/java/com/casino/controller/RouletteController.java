@@ -2,6 +2,7 @@ package com.casino.controller;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.casino.dtos.BetResults;
 import com.casino.dtos.SpinRequest;
 import com.casino.dtos.SpinResult;
 import com.casino.service.RouletteService;
@@ -28,9 +29,15 @@ public class RouletteController {
     }
 
     @PostMapping("/bet/{userId}")
-    public double placeBets(
+    public BetResults placeBets(
             @PathVariable Long userId,
             @RequestBody List<SpinRequest> bets) {
+
+        System.out.println("🎯 Recibiendo apuestas del usuario ID: " + userId);
+        for (SpinRequest bet : bets) {
+            System.out.println("➡️ Apuesta: " + bet.getType());
+        }
+
         return rouletteService.placeBets(userId, bets);
     }
 

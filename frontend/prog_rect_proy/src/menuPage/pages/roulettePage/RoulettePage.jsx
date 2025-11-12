@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -23,11 +24,16 @@ const RoulettePage = ({ user, setUser }) => {
   const [winningNumber, setWinningNumber] = useState(null);
   const [lastWinAmount, setLastWinAmount] = useState(0);
   const [history, setHistory] = useState([]);
+  const betsRef = useRef(currentBets);
 
   // ==================== VALIDACIÓN USUARIO ====================
   useEffect(() => {
     if (!user) navigate("/login");
   }, [user, navigate]);
+
+  useEffect(() => {
+    betsRef.current = currentBets;
+  }, [currentBets]);
 
   // ==================== SINCRONIZAR BALANCE ====================
   useEffect(() => {
@@ -59,65 +65,80 @@ const RoulettePage = ({ user, setUser }) => {
   };
 
   // ==================== EFECTO PRINCIPAL (cada 90s) ====================
-// ==================== EFECTO PRINCIPAL (cada 90s) ====================
-useEffect(() => {
-  const interval = setInterval(async () => {
-    try {
-      console.log("⏰ Intentando girar automáticamente...");
+  // ==================== EFECTO PRINCIPAL (cada 90s) ====================
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      try {
+        if (!spinning) {
+          const signal = await RouletteAPI.getWinningNumber();
+          console.log("🛰️ Señal recibida:", signal);
 
-      if (!spinning) {
-        const signal = await RouletteAPI.getWinningNumber();
-        console.log("🛰️ Señal recibida:", signal);
-
-        // Si el backend indica que debe girar (por ejemplo: signal.spin === true)
-        if (signal?.spin) {
-          handleSpin(signal.winningNumber);
-        } else {
-          // Si no llega señal, puedes hacer que gire igual con un número local
-          const randomNumber = Math.floor(Math.random() * 37);
-          console.log("🎲 Giro local automático:", randomNumber);
-          handleSpin(randomNumber);
+          if (signal?.spin) {
+            // usa la ref aquí, no el estado cerrado
+            await handleSpin(signal.winningNumber, betsRef.current);
+          }
         }
+      } catch (error) {
+        console.error("❌ Error al obtener señal de ruleta:", error);
       }
-    } catch (error) {
-      console.error("❌ Error al obtener señal de ruleta:", error);
-    }
-  }, 90000); // 90 000 ms = 1.5 minutos
+    }, 30000);
 
-  return () => clearInterval(interval);
-}, [spinning]); // <== agregamos 'spinning' para evitar condiciones viejas
-
-
+    return () => clearInterval(interval);
+  }, [spinning]);
 
   // ==================== GIRAR RULETA ====================
-// ==================== GIRAR RULETA ====================
-const handleSpin = async (forcedNumber = null) => {
-  if (spinning) return;
+  // ==================== GIRAR RULETA ====================
 
-  setSpinning(true);
-  setWinningNumber(null);
-  setLastWinAmount(0);
+  const handleSpin = async (winningNumber, currentBetsSnapshot) => {
+    setSpinning(true);
+    console.log("🎯 Iniciando spin con número:", winningNumber);
 
-  try {
-    // Si viene número forzado (desde backend o intervalo), úsalo
-    const resultNumber =
-      forcedNumber ?? (await RouletteAPI.getWinningNumber()).winningNumber;
+    const bets = currentBetsSnapshot ?? currentBets; // fallback por seguridad
 
-    console.log("🎯 Girando con número:", resultNumber);
-    setWinningNumber(resultNumber);
+    if (!bets || bets.length === 0) {
+      console.warn("⚠️ No hay apuestas para enviar.");
+      setSpinning(false);
+      return;
+    }
 
-    // Deja que la animación se reproduzca y el componente RouletteWheel
-    // llame a onSpinEnd cuando termine.
-  } catch (error) {
-    console.error("Error durante el giro:", error);
-    setSpinning(false);
-  }
-};
+    try {
+      setWinningNumber(winningNumber);
+      console.log("📤 Enviando apuestas al backend:", bets);
 
+      const betsToSend = bets.map((bet) => ({
+        userId: user.id,
+        type: bet.type,
+        value: bet.value,
+        amount: bet.amount,
+      }));
 
+      console.log("🧾 Formato final de apuestas (POST):", betsToSend);
+
+      const result = await RouletteAPI.postBets(user.id, betsToSend);
+
+      console.log("💰 Resultado de la partida:", result);
+
+      const { totalWinning, totalBetAmount } = result;
+      const netChange = totalWinning - totalBetAmount;
+      setCredits((prev) => prev + netChange);
+
+      handleClearBets();
+      setSpinning(false);
+
+      console.log(`✅ Apuestas procesadas. Ganancia neta: ${netChange}`);
+    } catch (error) {
+      if (error.response?.data?.message) {
+        alert(error.response.data.message); // Muestra "Saldo insuficiente"
+      } else {
+        console.error("Error desconocido", error);
+      }
+      setSpinning(false);
+    }
+  };
 
   const handleClearBets = () => {
-    if (!spinning) setCurrentBets([]);
+    setCurrentBets([]);
+    console.log("🧹 Apuestas limpiadas después del spin.");
   };
 
   // ==================== RENDER ====================
@@ -177,7 +198,9 @@ const handleSpin = async (forcedNumber = null) => {
               <p className="winner-number">{winningNumber}</p>
               <p className="winner-amount">
                 Has ganado:
-                <span className="amount">${lastWinAmount.toLocaleString()}</span>
+                <span className="amount">
+                  ${lastWinAmount.toLocaleString()}
+                </span>
               </p>
               <motion.button
                 className="close-button"
@@ -196,4 +219,3 @@ const handleSpin = async (forcedNumber = null) => {
 };
 
 export default RoulettePage;
-

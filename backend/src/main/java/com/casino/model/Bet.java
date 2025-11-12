@@ -8,14 +8,14 @@ public class Bet {
     private User user;
     private double amount;
     private BetType type;
-    private Integer number; 
-    private String color;   
+    private Integer number;
+    private String color;
     private Integer tercio;
     private Integer columna;
     private String parImpar;
     private String altoBajo;
 
-    public Bet(User user,double amount, BetType type) {
+    public Bet(User user, double amount, BetType type) {
         this.user = user;
         this.amount = amount;
         this.type = type;
@@ -59,46 +59,69 @@ public class Bet {
     }
 
     public double calculatePayout(int winningNumber) {
-        if (!isWinner(winningNumber)) return 0;
+        double payout = 0;
 
-        switch (type) {
-            case NUMBER:
-                return amount * 36;
+        if (isWinner(winningNumber)) {
+            switch (type) {
+                case NUMBER:
+                    payout = amount * 36;
+                    break;
 
-            case COLOR:
-            case PARITY:
-            case RANGE:
-                return amount * 2;  // paga 1:1 + apuesta
+                case COLOR:
+                case PARITY:
+                case RANGE:
+                    payout = amount * 2; // paga 1:1 + apuesta
+                    break;
 
-            case DOZEN:
-            case COLUMN:
-                return amount * 3;  // paga 2:1 + apuesta
+                case DOZEN:
+                case COLUMN:
+                    payout = amount * 3; // paga 2:1 + apuesta
+                    break;
 
-            default:
-                return 0;
+                default:
+                    payout = 0;
+            }
+
+            // 🔹 Actualiza el balance del usuario ganador
+            if (user != null) {
+                user.updateBalance(payout);
+            }
+
+        } else {
+            // El usuario pierde, no se devuelve nada
+            payout = 0;
         }
+
+        return payout;
     }
 
-private String getColor(int number) {
-        int[] rojos = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36};
+    private String getColor(int number) {
+        int[] rojos = { 1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36 };
         for (int rojo : rojos) {
-            if (number == rojo) return "ROJO";
+            if (number == rojo)
+                return "ROJO";
         }
         return "NEGRO";
     }
 
     private int getTercio(int number) {
-        if (number >= 1 && number <= 12) return 1;
-        if (number >= 13 && number <= 24) return 2;
-        if (number >= 25 && number <= 36) return 3;
+        if (number >= 1 && number <= 12)
+            return 1;
+        if (number >= 13 && number <= 24)
+            return 2;
+        if (number >= 25 && number <= 36)
+            return 3;
         return -1;
     }
 
     private int getColumna(int number) {
-        if (number % 3 == 1) return 1; // Columna 1: 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34
-        if (number % 3 == 2) return 2; // Columna 2: 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35
-        if (number % 3 == 0) return 3; // Columna 3: 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36
+        if (number % 3 == 1)
+            return 1; // Columna 1: 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34
+        if (number % 3 == 2)
+            return 2; // Columna 2: 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35
+        if (number % 3 == 0)
+            return 3; // Columna 3: 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36
         return -1;
     }
-    
+
 }

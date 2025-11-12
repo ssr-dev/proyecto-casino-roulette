@@ -47,7 +47,6 @@ public class UserService {
                 .orElse(null); // puedes lanzar excepción si prefieres
     }
 
-
     public void updateUser(User user) {
         users.put(user.getId(), user);
     }
@@ -57,7 +56,7 @@ public class UserService {
     }
 
     public User findById(Long userId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        return users.get(userId);
+
     }
 }

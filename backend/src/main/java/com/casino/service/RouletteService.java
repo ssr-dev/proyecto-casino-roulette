@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.casino.dtos.BetResults;
 import com.casino.dtos.SpinRequest;
 import com.casino.dtos.SpinResult;
 import com.casino.model.Bet;
@@ -56,7 +57,8 @@ public class RouletteService {
     @Autowired
     private BetService betService;
 
-    public double placeBets(Long userId, List<SpinRequest> bets) {
+    public BetResults placeBets(Long userId, List<SpinRequest> bets) {
+        double totalWinnig = 0;
         User user = userService.findById(userId);
         if (user == null)
             throw new IllegalArgumentException("Usuario no encontrado");
@@ -72,10 +74,10 @@ public class RouletteService {
 
         for (SpinRequest req : bets) {
             Bet bet = betService.buildBet(req, user);
-            betService.resolvePayout(bet, winningNumber);
+            totalWinnig += betService.resolvePayout(bet, winningNumber);
         }
 
-        return totalBetAmount; 
+        return new BetResults(totalBetAmount, totalWinnig); 
     }
 
 
