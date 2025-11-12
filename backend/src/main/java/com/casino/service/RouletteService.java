@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.casino.dtos.SpinRequest;
@@ -38,9 +37,8 @@ public class RouletteService {
         return winningNumber;
     }
 
-    @Scheduled(fixedRate = 90_000L, initialDelay = 0L)
     public SpinResult autoSpin() {
-        return new SpinResult(null, 0.0, spinOnce(), false); 
+        return new SpinResult(spinOnce(), true);
     }
 
     public int getLastNumber() {

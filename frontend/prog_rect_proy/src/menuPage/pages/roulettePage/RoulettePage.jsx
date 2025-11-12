@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -15,114 +15,112 @@ import RouletteAPI from "../../../interceptors/axios.jsx";
 const RoulettePage = ({ user, setUser }) => {
   const navigate = useNavigate();
 
-  // 🔹 Verifica usuario
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-  }, [user, navigate]);
-
-  if (!user) return null;
-
-  const [credits, setCredits] = useState(user.balance);
+  // ==================== ESTADOS ====================
+  const [credits, setCredits] = useState(user?.balance ?? 0);
   const [selectedChip, setSelectedChip] = useState(1);
   const [currentBets, setCurrentBets] = useState([]);
   const [spinning, setSpinning] = useState(false);
   const [winningNumber, setWinningNumber] = useState(null);
   const [lastWinAmount, setLastWinAmount] = useState(0);
   const [history, setHistory] = useState([]);
-  const [spinSignal, setSpinSignal] = useState(false); // ✅ ahora sí existe
 
-  // Mantener créditos sincronizados con el usuario global
+  // ==================== VALIDACIÓN USUARIO ====================
+  useEffect(() => {
+    if (!user) navigate("/login");
+  }, [user, navigate]);
+
+  // ==================== SINCRONIZAR BALANCE ====================
   useEffect(() => {
     setUser((prev) => ({ ...prev, balance: credits }));
   }, [credits]);
 
-  const currentBetAmount = useMemo(() => {
-    return currentBets.reduce((sum, bet) => sum + bet.amount, 0);
-  }, [currentBets]);
+  // ==================== CALCULAR TOTAL DE APUESTA ====================
+  const currentBetAmount = useMemo(
+    () => currentBets.reduce((sum, bet) => sum + bet.amount, 0),
+    [currentBets]
+  );
 
+  // ==================== COLOCAR APUESTA ====================
   const handlePlaceBet = (type, value) => {
     if (spinning) return;
 
-    const betIndex = currentBets.findIndex(
-      (bet) => bet.type === type && bet.value === value
-    );
-
-    const newBets = [...currentBets];
-
-    if (betIndex > -1) {
-      newBets[betIndex].amount += selectedChip;
-    } else {
-      newBets.push({ type, value, amount: selectedChip });
-    }
-
-    setCurrentBets(newBets);
+    setCurrentBets((prev) => {
+      const existing = prev.find((b) => b.type === type && b.value === value);
+      if (existing) {
+        return prev.map((b) =>
+          b.type === type && b.value === value
+            ? { ...b, amount: b.amount + selectedChip }
+            : b
+        );
+      } else {
+        return [...prev, { type, value, amount: selectedChip }];
+      }
+    });
   };
 
-  // 🔹 Verifica cada 5s si el backend manda señal para girar
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
+  // ==================== EFECTO PRINCIPAL (cada 90s) ====================
+// ==================== EFECTO PRINCIPAL (cada 90s) ====================
+useEffect(() => {
+  const interval = setInterval(async () => {
+    try {
+      console.log("⏰ Intentando girar automáticamente...");
+
+      if (!spinning) {
         const signal = await RouletteAPI.getWinningNumber();
-        if (signal.spin && !spinning) {
-          setSpinSignal(true);
+        console.log("🛰️ Señal recibida:", signal);
+
+        // Si el backend indica que debe girar (por ejemplo: signal.spin === true)
+        if (signal?.spin) {
+          handleSpin(signal.winningNumber);
+        } else {
+          // Si no llega señal, puedes hacer que gire igual con un número local
+          const randomNumber = Math.floor(Math.random() * 37);
+          console.log("🎲 Giro local automático:", randomNumber);
+          handleSpin(randomNumber);
         }
-      } catch (err) {
-        console.error("Error al verificar spin signal:", err);
       }
-    }, 90000); // <-- 3 segundos
-
-    return () => clearInterval(interval);
-  }, []); // <-- solo se ejecuta 1 vez
-
-  // 🔹 Cuando llega la señal, girar la ruleta
-  useEffect(() => {
-    if (spinSignal && !spinning) {
-      handleSpin();
+    } catch (error) {
+      console.error("❌ Error al obtener señal de ruleta:", error);
     }
-  }, [spinSignal]);
+  }, 90000); // 90 000 ms = 1.5 minutos
 
-const handleSpin = async () => {
+  return () => clearInterval(interval);
+}, [spinning]); // <== agregamos 'spinning' para evitar condiciones viejas
 
-  if (spinning || currentBetAmount === 0 || credits < currentBetAmount) return;
+
+
+  // ==================== GIRAR RULETA ====================
+// ==================== GIRAR RULETA ====================
+const handleSpin = async (forcedNumber = null) => {
+  if (spinning) return;
 
   setSpinning(true);
   setWinningNumber(null);
   setLastWinAmount(0);
 
   try {
-    await RouletteAPI.postBets(user.id, currentBets);
+    // Si viene número forzado (desde backend o intervalo), úsalo
+    const resultNumber =
+      forcedNumber ?? (await RouletteAPI.getWinningNumber()).winningNumber;
 
-    const result = await RouletteAPI.getWinningNumber();
+    console.log("🎯 Girando con número:", resultNumber);
+    setWinningNumber(resultNumber);
 
-    setWinningNumber(result.number);
-
-    const winnings = result.winnings ?? 0;
-
-    const newCredits = credits - currentBetAmount + winnings;
-    setCredits(newCredits);
-    setLastWinAmount(winnings);
-    setUser(prev => ({ ...prev, balance: newCredits }));
-
-    setHistory(prev => [result.number, ...prev]);
-
+    // Deja que la animación se reproduzca y el componente RouletteWheel
+    // llame a onSpinEnd cuando termine.
   } catch (error) {
     console.error("Error durante el giro:", error);
-  } finally {
-    setCurrentBets([]);
     setSpinning(false);
-    setSpinSignal(false);
   }
 };
+
 
 
   const handleClearBets = () => {
     if (!spinning) setCurrentBets([]);
   };
 
-  // ----------------------------------------------------------------------------------------------
-
+  // ==================== RENDER ====================
   return (
     <div className="app-container">
       <div className="main-grid">
@@ -160,7 +158,7 @@ const handleSpin = async () => {
       />
 
       <AnimatePresence>
-        {winningNumber && !spinning && (
+        {winningNumber !== null && !spinning && (
           <motion.div
             className="overlay"
             initial={{ opacity: 0 }}
@@ -179,9 +177,7 @@ const handleSpin = async () => {
               <p className="winner-number">{winningNumber}</p>
               <p className="winner-amount">
                 Has ganado:
-                <span className="amount">
-                  ${lastWinAmount.toLocaleString()}
-                </span>
+                <span className="amount">${lastWinAmount.toLocaleString()}</span>
               </p>
               <motion.button
                 className="close-button"
@@ -200,3 +196,4 @@ const handleSpin = async () => {
 };
 
 export default RoulettePage;
+
