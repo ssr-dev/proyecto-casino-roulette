@@ -5,108 +5,40 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.casino.dtos.SpinRequest;
 import com.casino.dtos.SpinResult;
 import com.casino.model.Bet;
-import com.casino.model.BetType;
+import com.casino.model.Roulette;
 import com.casino.model.User;
 
 @Service
 public class RouletteService {
-
+    
     private static final int HISTORY_LIMIT = 100;
     private static final int WHEEL_SIZE = 37;
-
-    private static final Set<Integer> ROJOS = Set.of(1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36);
-    private static final Set<Integer> NEGROS = Set.of(2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35);
     
     private final Deque<Integer> history = new ArrayDeque<>(HISTORY_LIMIT);
     private final Object lock = new Object();
-
+    
+    private Roulette r = new Roulette();
     private final AtomicInteger lastNumber = new AtomicInteger(-1);
-
+    int winningNumber = 0;
+    
     @Autowired
-    private UserService userService; 
-
-    private double calculateWinnings(Bet bet, int winningNumber) {
-        if (bet.getType() == BetType.COLOR) {
-            String colorApostado = bet.getColor();
-            if ("ROJO".equalsIgnoreCase(colorApostado) && ROJOS.contains(winningNumber)) {
-                return bet.getAmount() * 2.0;
-            }
-            if ("NEGRO".equalsIgnoreCase(colorApostado) && NEGROS.contains(winningNumber)) {
-                return bet.getAmount() * 2.0;
-            }
-        }
-        return 0.0;
-    }
-   
-    public SpinResult spinAndProcessBet(Long userId, String typeStr, String valueStr, double amount) {
-        
-        User user = userService.findById(userId);
-        
-        if (user == null) {
-            throw new IllegalArgumentException("Usuario no encontrado con ID: " + userId);
-        }
-
-        BetType type = BetType.valueOf(typeStr.toUpperCase());
-        Bet bet = null;
-        
-        switch (type) {
-            case NUMBER:
-                bet = user.placeNumberBet(Integer.parseInt(valueStr), amount);
-                break;
-            case COLOR:
-                bet = user.placeColorBet(valueStr, amount);
-                break;
-            case DOZEN:
-                bet = user.placeTercioBet(Integer.parseInt(valueStr), amount);
-                break;
-            case COLUMN:
-                bet = user.placeColumnaBet(Integer.parseInt(valueStr), amount);
-                break;
-            case PARITY:
-                bet = user.placeParImparBet(valueStr, amount);
-                break;
-            case RANGE:
-                bet = user.placeAltoBajoBet(valueStr, amount);
-                break;
-            default:
-                throw new IllegalArgumentException("Tipo de apuesta inválido: " + typeStr);
-        }
-
-        Random random = new Random();
-        int winningNumber = random.nextInt(WHEEL_SIZE); 
+    private UserService userService;
+    
+    public int spinOnce() {
+        winningNumber = r.spin();
+        System.out.println("Spin automático generado: " + winningNumber);
         appendToHistory(winningNumber);
         lastNumber.set(winningNumber);
-
-        double totalWinnings = calculateWinnings(bet, winningNumber); 
-        boolean isWinner = totalWinnings > 0;
-
-        user.updateBalance(totalWinnings); 
-        userService.updateUser(user); 
-
-        return new SpinResult(
-            user.getId(), 
-            user.getBalance(),
-            winningNumber,
-            isWinner
-        );
+        return winningNumber;
     }
 
-    public int spinOnce() {
-        Random random = new Random();
-        int n = random.nextInt(WHEEL_SIZE);
-        appendToHistory(n);
-        lastNumber.set(n);
-        return n;
-    }
-
-    @Scheduled(fixedRate = 90_000L, initialDelay = 0L)
     public SpinResult autoSpin() {
-        return new SpinResult(null, 0.0, spinOnce(), false); 
+        return new SpinResult(spinOnce(), true);
     }
 
     public int getLastNumber() {
@@ -120,6 +52,33 @@ public class RouletteService {
                     .collect(Collectors.toList());
         }
     }
+
+    @Autowired
+    private BetService betService;
+
+    public double placeBets(Long userId, List<SpinRequest> bets) {
+        User user = userService.findById(userId);
+        if (user == null)
+            throw new IllegalArgumentException("Usuario no encontrado");
+
+        double totalBetAmount = bets.stream()
+                .mapToDouble(SpinRequest::getAmount)
+                .sum();
+
+        if (user.getBalance() < totalBetAmount) {
+            throw new IllegalArgumentException("Saldo insuficiente");
+        }
+        user.setBalance(user.getBalance() - totalBetAmount);
+
+        for (SpinRequest req : bets) {
+            Bet bet = betService.buildBet(req, user);
+            betService.resolvePayout(bet, winningNumber);
+        }
+
+        return totalBetAmount; 
+    }
+
+
 
     public List<Integer> getHistory() {
         synchronized (lock) {

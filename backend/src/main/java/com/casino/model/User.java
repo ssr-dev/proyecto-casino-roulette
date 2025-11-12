@@ -1,8 +1,6 @@
 package com.casino.model;
 
 import lombok.Data;
-import com.casino.model.Bet;
-import com.casino.model.BetType;
 
 @Data
 public class User {

@@ -1,90 +1,38 @@
 package com.casino.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
+import com.casino.dtos.SpinRequest;
 import com.casino.dtos.SpinResult;
-import com.casino.service.BetService;
 import com.casino.service.RouletteService;
-import com.casino.service.UserService;
+
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/roulette", produces = "application/json")
+@RequestMapping("/roulette")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class RouletteController {
 
-    @Autowired
-    private RouletteService rouletteService;
-    
-    @Autowired
-    private UserService userService;
+    private final RouletteService rouletteService;
 
-    @Autowired
-    private BetService betService;
-
-
-    @PostMapping("/spin")
-    public SpinResult spinAndBet(@RequestBody Map<String, Object> requestBody) {
-        try {
-            Object userIdObj = requestBody.get("userId");
-            if (userIdObj == null) {
-                throw new IllegalArgumentException("El campo 'userId' es obligatorio.");
-            }
-            Long userId = ((Number) userIdObj).longValue();
-
-            String type = (String) requestBody.get("type");
-            String value = (String) requestBody.get("value");
-            if (type == null || value == null) {
-                throw new IllegalArgumentException("Los campos 'type' y 'value' son obligatorios.");
-            }
-            
-            Object amountObj = requestBody.get("amount");
-            if (amountObj == null) {
-                throw new IllegalArgumentException("El campo 'amount' es obligatorio.");
-            }
-            
-            Double amount;
-            if (amountObj instanceof Number) {
-                amount = ((Number) amountObj).doubleValue();
-            } else if (amountObj instanceof String) {
-                amount = Double.parseDouble((String) amountObj);
-            } else {
-                throw new IllegalArgumentException("El campo 'amount' tiene un formato incorrecto.");
-            }
-
-            return rouletteService.spinAndProcessBet(
-                userId,
-                type,
-                value,
-                amount
-            );
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (ClassCastException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error de formato de datos: Asegúrate de que los campos numéricos sean números y las cadenas sean texto.");
-        }
-    }
-
-    @GetMapping("/autospin")
-    public SpinResult autoSpinTrigger() {
+    /** ✅ GET /roulette/spin */
+    @GetMapping("/spin")
+    public SpinResult spin() {
+        System.out.println("Spin automático generado: lalalala ");
         return rouletteService.autoSpin();
     }
-    
-    @GetMapping("/bet/{userId}")
-    public void placeBet(
+
+    @PostMapping("/bet/{userId}")
+    public double placeBets(
             @PathVariable Long userId,
-            @RequestParam List<String> type,
-            @RequestParam List<String> value,
-            @RequestParam List<Double> amount) {
-
+            @RequestBody List<SpinRequest> bets) {
+        return rouletteService.placeBets(userId, bets);
     }
-
 
     @GetMapping("/history")
     public List<Integer> history() {
