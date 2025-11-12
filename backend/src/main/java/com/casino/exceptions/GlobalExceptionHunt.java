@@ -1,4 +1,4 @@
-package com.example.rule.exceptions;
+package com.casino.exceptions;
 
 import java.util.List;
 
@@ -6,8 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import com.example.rule.helpers.ErrorCodes;
 
 @RestControllerAdvice
 public class GlobalExceptionHunt {

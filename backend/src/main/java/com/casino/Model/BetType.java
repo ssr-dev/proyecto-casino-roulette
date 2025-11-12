@@ -4,4 +4,4 @@ public enum BetType {
     NUMBER,
     COLOR, 
     TERCIO
-}
+} 

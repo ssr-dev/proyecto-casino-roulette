@@ -7,7 +7,6 @@ import com.casino.repository.RoundRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Random;
 
 @Service
 @Transactional
@@ -21,8 +20,6 @@ public class RouletteService {
     
     @Autowired
     private BetService betService;
-    
-    private final Random random = new Random();
     
     public int spinRoulette() {
         Roulette roulette = rouletteRepository.findByActive(true)

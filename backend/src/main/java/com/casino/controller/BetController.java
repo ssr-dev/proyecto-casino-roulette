@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/bets")
+@CrossOrigin(origins = "http://localhost:3000") // Cambia el puerto si es necesario
 public class BetController {
     @Autowired
     private BetService betService;

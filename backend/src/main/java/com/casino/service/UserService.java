@@ -20,6 +20,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User getUserByName(String name) {
+        return userRepository.findByName(name)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+    }
+
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));

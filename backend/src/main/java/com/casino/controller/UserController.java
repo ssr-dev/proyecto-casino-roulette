@@ -1,5 +1,6 @@
 package com.casino.controller;
 
+import com.casino.dtos.CreateUserRequest;
 import com.casino.model.User;
 import com.casino.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,13 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public User createUser(@RequestParam String name, @RequestParam double initialBalance) {
-        return userService.createUser(name, initialBalance);
+    public User createUser(@RequestBody CreateUserRequest req) {
+        return userService.createUser(req.getName(), req.getInitialBalance());
+    }
+
+    @GetMapping("/search")
+    public User findByName(@RequestParam String name) {
+        return userService.getUserByName(name);
     }
 
     @GetMapping("/{id}")
@@ -32,4 +38,5 @@ public class UserController {
         userService.updateUserBalance(id, amount);
         return userService.getUserById(id);
     }
+
 }

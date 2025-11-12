@@ -1,0 +1,32 @@
+/* Ícono general */
+.roulette-icon {
+  color: white;
+  width: 32px;
+  height: 32px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Círculo exterior */
+.roulette-circle {
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
+
+/* Líneas en cruz */
+.roulette-lines {
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* Centro del círculo */
+.roulette-center {
+  fill: currentColor;
+}
+
+/* Efecto hover opcional */
+.roulette-icon:hover {
+  transform: rotate(10deg) scale(1.1);
+  color: #ff4b4b;
+}

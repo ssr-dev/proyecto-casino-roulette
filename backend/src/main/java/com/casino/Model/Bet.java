@@ -24,7 +24,7 @@ public class Bet {
     private Integer tercio;
     
     @Column(nullable = false)
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private LocalDateTime timestamp;
     
     private boolean resolved = false;
     private boolean won = false;
@@ -40,12 +40,16 @@ public class Bet {
     
     public double calculatePayout(int winningNumber) {
         if (!isWinner(winningNumber)) return 0;
-        
-        return switch (type) {
-            case NUMBER -> amount * 36;
-            case COLOR -> amount * 2;
-            case TERCIO -> amount * 3;
-        };
+        switch (type) {
+            case NUMBER:
+                return amount * 36;
+            case COLOR:
+                return amount * 2;
+            case TERCIO:
+                return amount * 3;
+            default:
+                return 0;
+        }
     }
     
     public boolean isWinner(int winningNumber) {
@@ -64,5 +68,10 @@ public class Bet {
                 yield tercio != null && tercio == winningTercio;
             }
         };
+    }
+    
+    @PrePersist
+    protected void onCreate() {
+        this.timestamp = LocalDateTime.now();
     }
 }

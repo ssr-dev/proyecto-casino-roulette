@@ -1,0 +1,19 @@
+.chip-icon {
+  color: rgba(239, 68, 68, 0.7); /* rojo translúcido */
+}
+
+.chip-outer {
+  fill: white;
+  stroke: currentColor;
+  stroke-width: 1;
+}
+
+.chip-middle {
+  fill: none;
+  stroke: red;
+  stroke-width: 2;
+}
+
+.chip-center {
+  fill: white;
+}

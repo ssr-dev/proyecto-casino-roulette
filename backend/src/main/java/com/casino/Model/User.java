@@ -22,13 +22,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Bet> bets = new ArrayList<>();
     
-    private void validateBalance(double amount) {
-        if (amount > balance) {
+    public void updateBalance(double amount) {
+        if (this.balance + amount < 0) {
             throw new IllegalArgumentException("Saldo insuficiente");
         }
-    }
-    
-    public void updateBalance(double amount) {
         this.balance += amount;
     }
 }

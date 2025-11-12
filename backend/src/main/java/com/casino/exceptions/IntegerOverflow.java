@@ -1,4 +1,4 @@
-package com.example.rule.exceptions;
+package com.casino.exceptions;
 
 import java.util.List;
 

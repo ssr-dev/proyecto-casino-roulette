@@ -1,4 +1,4 @@
-package com.casino.dto;
+package com.casino.dtos;
 
 import lombok.Data;
 

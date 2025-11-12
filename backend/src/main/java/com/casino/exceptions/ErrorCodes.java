@@ -1,4 +1,4 @@
-package com.example.rule.helpers;
+package com.casino.exceptions;
 
 public class ErrorCodes {
     public static final String INVALID_FORMAT = "INVALID_FORMAT";

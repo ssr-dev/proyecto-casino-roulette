@@ -25,6 +25,7 @@ public class BetHistoryService {
         betHistoryIds.addLast(bet.getId());
     }
 
+    @SuppressWarnings("null")
     public List<Bet> getLastBets(int count) {
         return betHistoryIds.stream()
                 .skip(Math.max(0, betHistoryIds.size() - count))

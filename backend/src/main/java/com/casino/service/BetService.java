@@ -36,7 +36,7 @@ public class BetService {
         bet.setType(BetType.NUMBER);
         bet.setNumber(number);
         
-        user.setBalance(user.getBalance() - amount);
+        user.updateBalance(-amount);
         userRepository.save(user);
         
         Bet savedBet = betRepository.save(bet);
@@ -53,7 +53,7 @@ public class BetService {
         bet.setType(BetType.COLOR);
         bet.setColor(color.toUpperCase());
         
-        user.setBalance(user.getBalance() - amount);
+        user.updateBalance(-amount);
         userRepository.save(user);
         
         Bet savedBet = betRepository.save(bet);
@@ -70,7 +70,7 @@ public class BetService {
         bet.setType(BetType.TERCIO);
         bet.setTercio(tercio);
         
-        user.setBalance(user.getBalance() - amount);
+        user.updateBalance(-amount);
         userRepository.save(user);
         
         Bet savedBet = betRepository.save(bet);

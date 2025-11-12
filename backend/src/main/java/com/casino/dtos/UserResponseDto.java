@@ -1,7 +1,6 @@
-package com.casino.dto;
+package com.casino.dtos;
 
 import lombok.Data;
-import java.util.List;
 
 @Data
 public class UserResponseDto {
